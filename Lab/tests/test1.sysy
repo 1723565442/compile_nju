@@ -1,0 +1,8 @@
+int main() {
+    int a=0;
+    int b=a;
+    return a;
+}
+void m(){
+    int p = 0;
+}
