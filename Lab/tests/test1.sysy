@@ -1,0 +1,6 @@
+int g_var=2;
+int main(){
+    int a = 1;
+    int b=a;
+    return a+g_var;
+}
