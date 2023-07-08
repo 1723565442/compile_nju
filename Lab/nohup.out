@@ -1,0 +1,49 @@
+; ModuleID = 'module'
+source_filename = "module"
+
+@a = global i32 10
+
+define i32 @f() {
+fEntry:
+  ret i32 0
+}
+
+define i32 @main() {
+mainEntry:
+  %b = alloca i32, align 4
+  store i32 0, i32* %b, align 4
+  %call_ = call i32 @f()
+  %a = load i32, i32* @a, align 4
+  %tmp_ = icmp slt i32 %a, 9
+  %tmp_1 = zext i1 %tmp_ to i32
+  %cmp_ = icmp ne i32 %tmp_1, 0
+  %pointer = alloca i1, align 1
+  store i1 %cmp_, i1* %pointer, align 1
+  br i1 %cmp_, label %next, label %end
+
+next:                                             ; preds = %mainEntry
+  %b2 = load i32, i32* %b, align 4
+  %tmp_3 = icmp eq i32 %b2, 1
+  %tmp_4 = zext i1 %tmp_3 to i32
+  %cmp = icmp ne i32 %tmp_4, 0
+  %and_ = and i1 %cmp_, %cmp
+  store i1 %and_, i1* %pointer, align 1
+  br label %end
+
+end:                                              ; preds = %next, %mainEntry
+  %load = load i1, i1* %pointer, align 1
+  %ext = zext i1 %load to i32
+  %tmp_5 = icmp ne i32 0, %ext
+  br i1 %tmp_5, label %true, label %false
+
+true:                                             ; preds = %end
+  store i32 3, i32* %b, align 4
+  br label %entry
+
+false:                                            ; preds = %end
+  store i32 4, i32* %b, align 4
+  br label %entry
+
+entry:                                            ; preds = %false, %true
+  ret i32 0
+}
