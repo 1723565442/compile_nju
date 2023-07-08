@@ -1,0 +1,195 @@
+; ModuleID = 'module'
+source_filename = "module"
+
+@sort_arr = global [5 x i32] zeroinitializer
+
+define i32 @combine(i32* %0, i32 %1, i32* %2, i32 %3) {
+combineEntry:
+  %arr1 = alloca i32*, align 8
+  store i32* %0, i32** %arr1, align 8
+  %arr1_length = alloca i32, align 4
+  store i32 %1, i32* %arr1_length, align 4
+  %arr2 = alloca i32*, align 8
+  store i32* %2, i32** %arr2, align 8
+  %arr2_length = alloca i32, align 4
+  store i32 %3, i32* %arr2_length, align 4
+  %i = alloca i32, align 4
+  store i32 0, i32* %i, align 4
+  %j = alloca i32, align 4
+  store i32 0, i32* %j, align 4
+  %k = alloca i32, align 4
+  store i32 0, i32* %k, align 4
+  br label %tmp_
+
+tmp_:                                             ; preds = %entry, %combineEntry
+  %i3 = load i32, i32* %i, align 4
+  %arr1_length4 = load i32, i32* %arr1_length, align 4
+  %tmp_5 = icmp slt i32 %i3, %arr1_length4
+  %tmp_6 = zext i1 %tmp_5 to i32
+  %cmp_ = icmp ne i32 %tmp_6, 0
+  %pointer = alloca i1, align 1
+  store i1 %cmp_, i1* %pointer, align 1
+  br i1 %cmp_, label %next, label %end
+
+tmp_1:                                            ; preds = %end
+  %i12 = load i32, i32* %i, align 4
+  %arr113 = load i32*, i32** %arr1, align 8
+  %arr114 = getelementptr i32, i32* %arr113, i32 %i12
+  %"arr1[i]" = load i32, i32* %arr114, align 4
+  %j15 = load i32, i32* %j, align 4
+  %arr216 = load i32*, i32** %arr2, align 8
+  %arr217 = getelementptr i32, i32* %arr216, i32 %j15
+  %"arr2[j]" = load i32, i32* %arr217, align 4
+  %tmp_18 = icmp slt i32 %"arr1[i]", %"arr2[j]"
+  %tmp_19 = zext i1 %tmp_18 to i32
+  %tmp_20 = icmp ne i32 0, %tmp_19
+  br i1 %tmp_20, label %true, label %false
+
+tmp_2:                                            ; preds = %entry, %end
+  %i38 = load i32, i32* %i, align 4
+  %arr1_length39 = load i32, i32* %arr1_length, align 4
+  %tmp_40 = icmp eq i32 %i38, %arr1_length39
+  %tmp_41 = zext i1 %tmp_40 to i32
+  %tmp_42 = icmp ne i32 0, %tmp_41
+  br i1 %tmp_42, label %true43, label %false44
+
+next:                                             ; preds = %tmp_
+  %j7 = load i32, i32* %j, align 4
+  %arr2_length8 = load i32, i32* %arr2_length, align 4
+  %tmp_9 = icmp slt i32 %j7, %arr2_length8
+  %tmp_10 = zext i1 %tmp_9 to i32
+  %cmp = icmp ne i32 %tmp_10, 0
+  %and_ = and i1 %cmp_, %cmp
+  store i1 %and_, i1* %pointer, align 1
+  br label %end
+
+end:                                              ; preds = %next, %tmp_
+  %load = load i1, i1* %pointer, align 1
+  %ext = zext i1 %load to i32
+  %tmp_11 = icmp ne i32 0, %ext
+  br i1 %tmp_11, label %tmp_1, label %tmp_2
+
+true:                                             ; preds = %tmp_1
+  %k21 = load i32, i32* %k, align 4
+  %sort_arr = getelementptr [5 x i32], [5 x i32]* @sort_arr, i32 0, i32 %k21
+  %i22 = load i32, i32* %i, align 4
+  %arr123 = load i32*, i32** %arr1, align 8
+  %arr124 = getelementptr i32, i32* %arr123, i32 %i22
+  %"arr1[i]25" = load i32, i32* %arr124, align 4
+  store i32 %"arr1[i]25", i32* %sort_arr, align 4
+  %i26 = load i32, i32* %i, align 4
+  %tmp_27 = add i32 %i26, 1
+  store i32 %tmp_27, i32* %i, align 4
+  br label %entry
+
+false:                                            ; preds = %tmp_1
+  %k28 = load i32, i32* %k, align 4
+  %sort_arr29 = getelementptr [5 x i32], [5 x i32]* @sort_arr, i32 0, i32 %k28
+  %j30 = load i32, i32* %j, align 4
+  %arr231 = load i32*, i32** %arr2, align 8
+  %arr232 = getelementptr i32, i32* %arr231, i32 %j30
+  %"arr2[j]33" = load i32, i32* %arr232, align 4
+  store i32 %"arr2[j]33", i32* %sort_arr29, align 4
+  %j34 = load i32, i32* %j, align 4
+  %tmp_35 = add i32 %j34, 1
+  store i32 %tmp_35, i32* %j, align 4
+  br label %entry
+
+entry:                                            ; preds = %false, %true
+  %k36 = load i32, i32* %k, align 4
+  %tmp_37 = add i32 %k36, 1
+  store i32 %tmp_37, i32* %k, align 4
+  br label %tmp_
+  br label %tmp_2
+
+true43:                                           ; preds = %tmp_2
+  br label %tmp_46
+
+false44:                                          ; preds = %tmp_2
+  br label %tmp_64
+
+entry45:                                          ; preds = %tmp_66, %tmp_48
+  %arr1_length81 = load i32, i32* %arr1_length, align 4
+  %arr2_length82 = load i32, i32* %arr2_length, align 4
+  %tmp_83 = add i32 %arr1_length81, %arr2_length82
+  %tmp_84 = sub i32 %tmp_83, 1
+  %sort_arr85 = getelementptr [5 x i32], [5 x i32]* @sort_arr, i32 0, i32 %tmp_84
+  %"sort_arr[arr1_length+arr2_length-1]" = load i32, i32* %sort_arr85, align 4
+  ret i32 %"sort_arr[arr1_length+arr2_length-1]"
+
+tmp_46:                                           ; preds = %tmp_47, %true43
+  %j49 = load i32, i32* %j, align 4
+  %arr2_length50 = load i32, i32* %arr2_length, align 4
+  %tmp_51 = icmp slt i32 %j49, %arr2_length50
+  %tmp_52 = zext i1 %tmp_51 to i32
+  %tmp_53 = icmp ne i32 0, %tmp_52
+  br i1 %tmp_53, label %tmp_47, label %tmp_48
+
+tmp_47:                                           ; preds = %tmp_46
+  %k54 = load i32, i32* %k, align 4
+  %sort_arr55 = getelementptr [5 x i32], [5 x i32]* @sort_arr, i32 0, i32 %k54
+  %j56 = load i32, i32* %j, align 4
+  %arr257 = load i32*, i32** %arr2, align 8
+  %arr258 = getelementptr i32, i32* %arr257, i32 %j56
+  %"arr2[j]59" = load i32, i32* %arr258, align 4
+  store i32 %"arr2[j]59", i32* %sort_arr55, align 4
+  %k60 = load i32, i32* %k, align 4
+  %tmp_61 = add i32 %k60, 1
+  store i32 %tmp_61, i32* %k, align 4
+  %j62 = load i32, i32* %j, align 4
+  %tmp_63 = add i32 %j62, 1
+  store i32 %tmp_63, i32* %j, align 4
+  br label %tmp_46
+  br label %tmp_48
+
+tmp_48:                                           ; preds = %tmp_47, %tmp_46
+  br label %entry45
+
+tmp_64:                                           ; preds = %tmp_65, %false44
+  %i67 = load i32, i32* %i, align 4
+  %arr1_length68 = load i32, i32* %arr1_length, align 4
+  %tmp_69 = icmp slt i32 %i67, %arr1_length68
+  %tmp_70 = zext i1 %tmp_69 to i32
+  %tmp_71 = icmp ne i32 0, %tmp_70
+  br i1 %tmp_71, label %tmp_65, label %tmp_66
+
+tmp_65:                                           ; preds = %tmp_64
+  %k72 = load i32, i32* %k, align 4
+  %sort_arr73 = getelementptr [5 x i32], [5 x i32]* @sort_arr, i32 0, i32 %k72
+  %i74 = load i32, i32* %i, align 4
+  %arr275 = load i32*, i32** %arr2, align 8
+  %arr276 = getelementptr i32, i32* %arr275, i32 %i74
+  %"arr2[i]" = load i32, i32* %arr276, align 4
+  store i32 %"arr2[i]", i32* %sort_arr73, align 4
+  %k77 = load i32, i32* %k, align 4
+  %tmp_78 = add i32 %k77, 1
+  store i32 %tmp_78, i32* %k, align 4
+  %i79 = load i32, i32* %i, align 4
+  %tmp_80 = add i32 %i79, 1
+  store i32 %tmp_80, i32* %i, align 4
+  br label %tmp_64
+  br label %tmp_66
+
+tmp_66:                                           ; preds = %tmp_65, %tmp_64
+  br label %entry45
+}
+
+define i32 @main() {
+mainEntry:
+  %a = alloca [2 x i32], align 4
+  %"0" = getelementptr [2 x i32], [2 x i32]* %a, i32 0, i32 0
+  store i32 1, i32* %"0", align 4
+  %"1" = getelementptr [2 x i32], [2 x i32]* %a, i32 0, i32 1
+  store i32 5, i32* %"1", align 4
+  %b = alloca [3 x i32], align 4
+  %"01" = getelementptr [3 x i32], [3 x i32]* %b, i32 0, i32 0
+  store i32 1, i32* %"01", align 4
+  %"12" = getelementptr [3 x i32], [3 x i32]* %b, i32 0, i32 1
+  store i32 4, i32* %"12", align 4
+  %"2" = getelementptr [3 x i32], [3 x i32]* %b, i32 0, i32 2
+  store i32 14, i32* %"2", align 4
+  %a3 = getelementptr [2 x i32], [2 x i32]* %a, i32 0, i32 0
+  %b4 = getelementptr [3 x i32], [3 x i32]* %b, i32 0, i32 0
+  %call_ = call i32 @combine(i32* %a3, i32 2, i32* %b4, i32 3)
+  ret i32 %call_
+}
